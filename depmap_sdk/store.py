@@ -3,16 +3,40 @@
 Single writer at a time: all mutations take an exclusive file lock, and writes are
 atomic (temp file + rename). Fine for the MVP; move to SQLite if you need parallel writers.
 """
-import fcntl
 import json
 import os
 import threading
+import time
 from contextlib import contextmanager
 
 from depmap_sdk import paths
 from depmap_sdk.schema import TABLES
 
 _local = threading.local()
+
+try:  # macOS / Linux
+    import fcntl
+
+    def _lock(fh):
+        fcntl.flock(fh, fcntl.LOCK_EX)
+
+    def _unlock(fh):
+        fcntl.flock(fh, fcntl.LOCK_UN)
+except ImportError:  # Windows
+    import msvcrt
+
+    def _lock(fh):
+        fh.write(" "); fh.flush(); fh.seek(0)
+        while True:
+            try:
+                msvcrt.locking(fh.fileno(), msvcrt.LK_NBLCK, 1)
+                return
+            except OSError:
+                time.sleep(0.05)
+
+    def _unlock(fh):
+        fh.seek(0)
+        msvcrt.locking(fh.fileno(), msvcrt.LK_UNLCK, 1)
 
 
 def _table_file(table):
@@ -33,14 +57,14 @@ def locked():
             _local.depth -= 1
         return
     paths.DATA_DIR.mkdir(parents=True, exist_ok=True)
-    with open(paths.DATA_DIR / ".lock", "w") as fh:
-        fcntl.flock(fh, fcntl.LOCK_EX)
+    with open(paths.DATA_DIR / ".lock", "a+") as fh:
+        _lock(fh)
         _local.depth = 1
         try:
             yield
         finally:
             _local.depth = 0
-            fcntl.flock(fh, fcntl.LOCK_UN)
+            _unlock(fh)
 
 
 def read(table):
