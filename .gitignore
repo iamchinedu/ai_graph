@@ -12,3 +12,5 @@ frontend/dist/
 frontend/public/graph.json
 
 streamlit_app/component/
+
+data/.lock

@@ -1,4 +1,4 @@
-"""File-backed table store: data/<table>/<table>.json (a JSON array of records).
+"""File-backed table store: data/<table>.json (a JSON array of records).
 
 Single writer at a time: all mutations take an exclusive file lock, and writes are
 atomic (temp file + rename). Fine for the MVP; move to SQLite if you need parallel writers.
@@ -18,7 +18,7 @@ _local = threading.local()
 def _table_file(table):
     if table not in TABLES:
         raise KeyError(f"unknown table: {table}")
-    return paths.DATA_DIR / table / f"{table}.json"
+    return paths.DATA_DIR / f"{table}.json"
 
 
 @contextmanager

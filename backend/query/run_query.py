@@ -23,7 +23,7 @@ _ALLOWED = ("select", "with", "describe", "show", "explain")
 def _connect():
     con = duckdb.connect(":memory:")
     for table, spec in TABLES.items():
-        f = paths.DATA_DIR / table / f"{table}.json"
+        f = paths.DATA_DIR / f"{table}.json"
         cols = ", ".join(f"'{c}': '{t}'" for c, t in spec["columns"].items())
         if f.exists() and f.stat().st_size > 2:
             con.execute(f"CREATE TABLE {table} AS SELECT * FROM read_json('{f}', format='array', columns={{{cols}}})")

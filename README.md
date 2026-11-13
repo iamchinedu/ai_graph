@@ -2,7 +2,7 @@
 
 Tracks which AI projects depend on which models, data tables, data platforms and observability
 tools, per environment (dev / test / prod), so a chat agent can answer "what breaks if...?" questions.
-Everything runs locally; data lives in `data/` as JSON, one folder per table.
+Everything runs locally; data lives in `data/` as JSON, one file per table.
 
 ## Quick start
 
@@ -22,7 +22,7 @@ Look at `data/` in VS Code after `run_all` to see the edge tables fill up.
 
 | Path | What it is |
 | --- | --- |
-| `data/<table>/<table>.json` | The tables (nodes and edges). Schema is defined in `depmap_sdk/schema.py`. |
+| `data/<table>.json` | The tables (nodes and edges). Schema is defined in `depmap_sdk/schema.py`. |
 | `depmap_sdk/` | The package a project imports. The `DepMap` class (`depmap.py`) is the one object projects use; it delegates to `identity`, `registry`, `packages`, `recorder` and `store` (files under `data/`). Self-contained: it never imports `backend/`. |
 | `backend/` | `store/` file store, `ingest.py` event handler, `checks/` edge status and package check, `graph/` NetworkX graph + impact, `query/` read-only DuckDB runner, `agent/` orchestrator, query writer and model settings (Gemini or OpenAI), `seed/` example data and break simulators. |
 | `skills/` | What the agent loads: a router (`README.md`) and sub-skills for schema, relationships, single-node dependencies, impact analysis. |

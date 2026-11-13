@@ -1,6 +1,6 @@
 """Single source of truth for every table: columns, types, key, and meaning.
 
-Each table lives in data/<table>/<table>.json as a JSON array of records.
+Each table lives in data/<table>.json as a JSON array of records.
 Timestamps are ISO-8601 UTC strings (VARCHAR) like 2026-11-11T10:00:00Z.
 """
 

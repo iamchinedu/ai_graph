@@ -148,7 +148,7 @@ def _is_stale(environment):
     if not snap.exists():
         return True
     built = snap.stat().st_mtime_ns
-    files = (data_paths.DATA_DIR / t / f"{t}.json" for t in TABLES)
+    files = (data_paths.DATA_DIR / f"{t}.json" for t in TABLES)
     return any(f.exists() and f.stat().st_mtime_ns > built for f in files)
 
 

@@ -12,7 +12,7 @@ description: Every table in the dependency map, its columns, types and meaning. 
 
 # Schema overview
 
-All tables are queryable by name in SQL (DuckDB over `data/<table>/<table>.json`).
+All tables are queryable by name in SQL (DuckDB over `data/<table>.json`).
 
 Conventions
 - Timestamps are ISO-8601 UTC strings (VARCHAR), e.g. `2026-11-11T21:14:02Z`. Compare them as strings, or `CAST(x AS TIMESTAMP)`.
