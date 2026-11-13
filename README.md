@@ -59,6 +59,77 @@ python -m backend.seed.simulate_break --help    # restore-* counterparts
 python -m backend.graph impact invoices --env prod
 ```
 
+## Graph JSON (what the screen reads)
+
+The Angular screen reads one JSON object and nothing else. The URL is the `GRAPH_URL` constant in
+`frontend/src/app/graph.service.ts` (default `graph.json`); point it at a file or an endpoint that returns this shape.
+The screen loads it once when it opens and again when you click the refresh icon. It never refreshes on a timer.
+Locally the file comes from `python -m backend.graph build` (writes `graph/graph_all.json`), then `npm run sync:graph`
+(or `npm start`) in `frontend/` copies it to `public/graph.json`. The TypeScript types are `RawGraph`, `RawNode` and `RawEdge` in
+`frontend/src/app/graph.model.ts`.
+
+```json
+{
+  "nodes": [ { "node": "project:prj_FIN_7f3a2c", "type": "project", "label": "Vendor-spend assistant", "id": "prj_FIN_7f3a2c", "...": "..." } ],
+  "edges": [ { "source": "project:prj_FIN_7f3a2c", "target": "table:1", "kind": "project_table", "environment": "prod", "...": "..." } ]
+}
+```
+
+Direction means "depends on": `source` depends on `target`. Edges reference nodes by their `node` key, which must be unique.
+Extra top-level keys (`directed`, `multigraph`, `graph`) are ignored.
+
+### Nodes
+
+Every node has `node` (`<type>:<key>`, unique), `type`, `label` and `id`. The rest depends on the type.
+
+| `type` | `node` key | Extra fields |
+| --- | --- | --- |
+| `project` | `project:<project_id>` | `department`; `environments`: `{ "<env>": { "account_id", "packages_valid", "packages_reason", "run_count", "last_init_at" } }` |
+| `account` | `account:<aws_account_id>` | none (the label is the account id) |
+| `packages` | `packages:<project_id>:<env>` | `environment`, `valid` (true / false / null = never checked), `reason`, `checked_at`, `python_version`, `package_count` |
+| `model` | `model:<model_id>` | `deprecated` (bool), `end_of_life_date` (`YYYY-MM-DD` or null) |
+| `profile` | `profile:<profile_arn>` | `profile_type`, `status`. Optional: the screen folds it away, so link a project straight to the model if you have no profiles |
+| `tool` | `tool:<name>` | none (observability tool) |
+| `platform` | `platform:<name>` | none (data platform, e.g. Snowflake) |
+| `database` | `database:<id>` | `environment` |
+| `table` | `table:<id>` | `environment`, `table_exists` (false shows as a failing dependency) |
+
+`env` is `dev`, `test` or `prod`.
+
+### Edges
+
+Every edge has `source`, `target`, `kind` and `environment` (`dev`, `test`, `prod`, or null for structural links).
+A project that runs in two environments gets one edge per environment.
+
+| `kind` | From to | Extra fields |
+| --- | --- | --- |
+| `project_account` | project to account | `last_seen` |
+| `project_packages` | project to packages | `status` (`pass` / `fail` / null), `status_reason`, `last_seen` |
+| `project_profile` | project to profile (or straight to the model) | `count` (model calls), `last_seen`, `status`, `status_reason` |
+| `project_table` | project to table | `count`, `last_seen`, `status`, `status_reason` |
+| `project_tool` | project to tool | `count`, `last_seen` |
+| `structural` | profile to model, table to database, database to platform | none |
+
+`status` is `"pass"` or `"fail"`; `"fail"` draws the link red and the reason shows in the project's Issues list.
+`count` sizes how many signals flow along the link.
+
+### Minimal example
+
+```json
+{
+  "nodes": [
+    { "node": "account:111111111111", "type": "account", "label": "111111111111", "id": "111111111111" },
+    { "node": "project:p1", "type": "project", "label": "HR bot", "id": "p1", "department": "HR",
+      "environments": { "dev": { "account_id": "111111111111", "packages_valid": true, "run_count": 3, "last_init_at": "2026-11-12T10:00:00Z" } } },
+    { "node": "model:m1", "type": "model", "label": "Claude Sonnet 4.6", "id": "m1", "deprecated": false, "end_of_life_date": null }
+  ],
+  "edges": [
+    { "source": "project:p1", "target": "account:111111111111", "kind": "project_account", "environment": "dev" },
+    { "source": "project:p1", "target": "model:m1", "kind": "project_profile", "environment": "dev", "count": 3, "status": "pass" }
+  ]
+}
+```
+
 ## Chat agent (needs a Gemini or OpenAI key)
 
 Put your key in `.env` (Gemini: https://aistudio.google.com/apikey, OpenAI: https://platform.openai.com/api-keys; `LLM_PROVIDER` picks which), then:

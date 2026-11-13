@@ -31,6 +31,8 @@ export class GraphComponent implements OnInit, AfterViewInit, OnDestroy {
   drawLinks = computed(() => this.vlinks());
   visibleNodes = computed(() => this.nodes());
   error = signal<string | null>(null);
+  refreshing = signal(false);
+  loadedAt = signal<Date | null>(null);
   env = signal<EnvFilter>('all');
   layout = signal<Layout>('brain');
   selectedId = signal<string | null>(null);
@@ -63,8 +65,14 @@ export class GraphComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private graphs: GraphService) {}
 
-  async ngOnInit() {
-    try { this.build(await this.graphs.load()); } catch (e: any) { this.error.set(e.message ?? String(e)); }
+  ngOnInit() { return this.refresh(); }
+
+  /** Load the graph again. Keeps the selection, environment and view; the screen never refreshes on its own. */
+  async refresh() {
+    this.refreshing.set(true);
+    try { this.build(await this.graphs.load()); this.error.set(null); this.loadedAt.set(new Date()); }
+    catch (e: any) { this.error.set(e.message ?? String(e)); }
+    finally { this.refreshing.set(false); }
   }
   ngAfterViewInit() {
     const el = this.cv.nativeElement;

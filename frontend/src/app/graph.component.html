@@ -20,11 +20,15 @@
       </div>
     </div>
     <input class="search" type="search" placeholder="Find a node" aria-label="Find a node" [value]="query()" (input)="query.set($any($event.target).value)" />
+    <button type="button" class="refresh" [disabled]="refreshing()" (click)="refresh()" aria-label="Refresh data"
+            [title]="loadedAt() ? 'Data loaded ' + loadedAt()!.toLocaleTimeString() + '. Click to reload.' : 'Reload the data'">
+      <svg viewBox="0 0 16 16" aria-hidden="true" [class.spin]="refreshing()"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2.5v3h-3" /></svg>
+    </button>
     <button type="button" (click)="reset()">Reset</button>
   </div>
 </header>
 
-@if (error()) {
+@if (error() && !loadedAt()) {
   <p class="error">{{ error() }}</p>
 } @else {
   <main class="layout">

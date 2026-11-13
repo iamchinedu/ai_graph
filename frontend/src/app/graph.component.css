@@ -150,3 +150,9 @@ canvas { position: absolute; inset: 0; display: block; touch-action: none; curso
 .dock:not(.open) { align-items: center; justify-content: center; }
 .start { padding: 10px 40px; font-size: 14px; font-weight: 500; border-radius: 10px; background: var(--accent-bg); border: 0.5px solid var(--accent); color: var(--accent); min-width: 180px; }
 .start:hover { background: var(--accent-bg); filter: brightness(1.12); }
+
+.refresh { display: inline-flex; align-items: center; padding: 6px 9px; }
+.refresh svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.refresh svg.spin { animation: spin 0.8s linear infinite; }
+.refresh:disabled { opacity: 0.6; cursor: default; }
+@keyframes spin { to { transform: rotate(360deg); } }
