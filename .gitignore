@@ -5,7 +5,7 @@ __pycache__/
 scratch/*
 !scratch/.gitkeep
 *.egg-info/
-graph/
+/graph/
 frontend/node_modules/
 frontend/.angular/
 frontend/dist/
