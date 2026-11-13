@@ -1,0 +1,23 @@
+[
+  {
+    "id": "anthropic.claude-sonnet-4-6-v1:0",
+    "name": "Claude Sonnet 4.6",
+    "provider": "anthropic",
+    "deprecated": false,
+    "end_of_life_date": null
+  },
+  {
+    "id": "anthropic.claude-3-sonnet-20240229-v1:0",
+    "name": "Claude 3 Sonnet",
+    "provider": "anthropic",
+    "deprecated": true,
+    "end_of_life_date": "2026-12-01"
+  },
+  {
+    "id": "amazon.nova-pro-v1:0",
+    "name": "Amazon Nova Pro",
+    "provider": "amazon",
+    "deprecated": false,
+    "end_of_life_date": null
+  }
+]

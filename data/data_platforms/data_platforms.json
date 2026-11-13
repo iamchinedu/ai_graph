@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "AWS S3"
+  },
+  {
+    "id": 2,
+    "name": "AWS DynamoDB"
+  },
+  {
+    "id": 3,
+    "name": "Databricks"
+  },
+  {
+    "id": 4,
+    "name": "Snowflake"
+  }
+]

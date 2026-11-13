@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "finance_db",
+    "platform_id": 4,
+    "environment": "prod"
+  },
+  {
+    "id": 2,
+    "name": "finance_db",
+    "platform_id": 4,
+    "environment": "dev"
+  },
+  {
+    "id": 3,
+    "name": "procurement_catalog",
+    "platform_id": 3,
+    "environment": "dev"
+  },
+  {
+    "id": 4,
+    "name": "hr-policies-bucket",
+    "platform_id": 1,
+    "environment": "test"
+  },
+  {
+    "id": 5,
+    "name": "helpdesk-tickets",
+    "platform_id": 2,
+    "environment": "test"
+  },
+  {
+    "id": 6,
+    "name": "ops_catalog",
+    "platform_id": 3,
+    "environment": "prod"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "project_id": "prj_FIN_7f3a2c",
+    "profile_id": "arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/finance-sonnet",
+    "environment": "prod",
+    "count": 12,
+    "last_seen": "2026-11-12T20:32:58Z",
+    "status": "pass",
+    "status_reason": null,
+    "status_checked_at": "2026-11-12T20:33:01Z"
+  },
+  {
+    "project_id": "prj_FIN_7f3a2c",
+    "profile_id": "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/finance-sonnet",
+    "environment": "dev",
+    "count": 30,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "status_checked_at": "2026-11-12T20:33:01Z"
+  },
+  {
+    "project_id": "prj_PRC_9b1d44",
+    "profile_id": "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/procurement-nova",
+    "environment": "dev",
+    "count": 9,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "status_checked_at": "2026-11-12T20:33:01Z"
+  },
+  {
+    "project_id": "prj_HR_c04e1a",
+    "profile_id": "arn:aws:bedrock:us-east-1:333333333333:application-inference-profile/hr-claude3",
+    "environment": "test",
+    "count": 4,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "fail",
+    "status_reason": "model Claude 3 Sonnet is deprecated",
+    "status_checked_at": "2026-11-12T20:33:01Z"
+  },
+  {
+    "project_id": "prj_ENG_52d9be",
+    "profile_id": "arn:aws:bedrock:us-east-1:333333333333:inference-profile/us.anthropic.claude-sonnet-4-6-v1:0",
+    "environment": "test",
+    "count": 15,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": "pass",
+    "status_reason": null,
+    "status_checked_at": "2026-11-12T20:33:01Z"
+  },
+  {
+    "project_id": "prj_OPS_a81f67",
+    "profile_id": "arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/ops-nova",
+    "environment": "prod",
+    "count": 7,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": "pass",
+    "status_reason": null,
+    "status_checked_at": "2026-11-12T20:33:01Z"
+  }
+]

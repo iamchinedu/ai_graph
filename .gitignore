@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+scratch/*
+!scratch/.gitkeep
+*.egg-info/
+graph/
+frontend/node_modules/
+frontend/.angular/
+frontend/dist/
+frontend/public/graph.json

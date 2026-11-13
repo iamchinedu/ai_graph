@@ -1,0 +1,38 @@
+[
+  {
+    "aws_account_id": "111111111111",
+    "environment": "dev"
+  },
+  {
+    "aws_account_id": "222222222222",
+    "environment": "dev"
+  },
+  {
+    "aws_account_id": "333333333333",
+    "environment": "dev"
+  },
+  {
+    "aws_account_id": "111111111111",
+    "environment": "test"
+  },
+  {
+    "aws_account_id": "222222222222",
+    "environment": "test"
+  },
+  {
+    "aws_account_id": "333333333333",
+    "environment": "test"
+  },
+  {
+    "aws_account_id": "111111111111",
+    "environment": "prod"
+  },
+  {
+    "aws_account_id": "222222222222",
+    "environment": "prod"
+  },
+  {
+    "aws_account_id": "333333333333",
+    "environment": "prod"
+  }
+]

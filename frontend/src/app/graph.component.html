@@ -1,0 +1,200 @@
+<header class="bar">
+  <div class="title">
+    <h1>Dependency map</h1>
+    <span class="sub">{{ visibleNodes().length }} nodes · {{ drawLinks().length }} links · {{ failing() }} failing</span>
+  </div>
+  <div class="controls">
+    <div class="field">
+      <span class="field-label">Environment</span>
+      <div class="seg" role="group" aria-label="Environment">
+        @for (e of envs; track e) {
+          <button type="button" [class.on]="env() === e" (click)="env.set(e)">{{ e === 'all' ? 'All' : e }}</button>
+        }
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">View option</span>
+      <div class="seg" role="group" aria-label="View option">
+        <button type="button" [class.on]="layout() === 'brain'" (click)="setLayout('brain')">Brain</button>
+        <button type="button" [class.on]="layout() === 'ladder'" (click)="setLayout('ladder')">Ladder</button>
+      </div>
+    </div>
+    <input class="search" type="search" placeholder="Find a node" aria-label="Find a node" [value]="query()" (input)="query.set($any($event.target).value)" />
+    <button type="button" (click)="reset()">Reset</button>
+  </div>
+</header>
+
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else {
+  <main class="layout">
+    <section class="stage">
+      <canvas #cv role="img" aria-label="Dependency graph"
+              (pointerdown)="down($event)" (pointermove)="move($event)" (pointerup)="up()" (pointercancel)="up()" (pointerleave)="leave()"></canvas>
+      <span class="hint">Drag a node or the background. Scroll to zoom. Click a node to trace it.</span>
+      <div class="legend">
+        @for (f of families; track f.key) { <span><i [style.background]="f.color" [style.boxShadow]="'0 0 8px ' + f.color"></i>{{ f.label }}</span> }
+        <span><i style="background:#ff5f6d;box-shadow:0 0 8px #ff5f6d"></i>Failing</span>
+      </div>
+    </section>
+
+    <aside class="panel" [class.chat-open]="chatOpen()" [class.chat-hidden]="chatOpen() && !chatBodyOpen()">
+      <section class="summary" [class.collapsed]="!summaryOpen()" aria-live="polite">
+        @if (selected(); as n) {
+          <div class="head">
+            <span class="chip" [style.background]="color(n)" [style.boxShadow]="'0 0 10px ' + color(n)"></span>
+            <div class="grow">
+              <h2>{{ n.type === 'packages' ? 'Packages ' + packagesState(n) : shortLabel(n) }}</h2>
+              <p class="muted">{{ info[n.type].label }}@if (n.type === 'packages') { · {{ n.raw['environment'] }} }</p>
+            </div>
+            <button type="button" class="chev" [class.open]="summaryOpen()" [attr.aria-expanded]="summaryOpen()" [attr.aria-label]="summaryOpen() ? 'Collapse summary' : 'Expand summary'" (click)="summaryOpen.update(v => !v)">
+                <span>{{ summaryOpen() ? 'Hide' : 'Show' }}</span>
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
+              </button>
+            <button type="button" class="x" aria-label="Clear selection" (click)="selectedId.set(null)">×</button>
+          </div>
+          @if (!summaryOpen()) { <p class="brief">{{ brief() }}</p> }
+
+          <div class="details">
+            @if (isDeprecated(n)) { <p class="note bad">Deprecated. {{ eolText(n.raw['end_of_life_date']) }}.</p> }
+            @if (n.type === 'project') {
+              @if (issuesOf(n); as issues) {
+                <section class="box" [class.issue]="issues.length > 0">
+                  <header class="box-title">Issues <span class="count" [class.zero]="issues.length === 0">{{ issues.length }}</span></header>
+                  @for (i of issues; track i.title) {
+                    <button type="button" class="issue-item" (click)="selectedId.set(i.id)"><b>{{ i.title }}</b><span>{{ i.detail }}</span></button>
+                  } @empty { <p class="none">No issues found.</p> }
+                </section>
+              }
+            }
+            @if (n.type === 'table' && n.raw['table_exists'] === false) { <p class="note bad">This table no longer exists.</p> }
+            @if (n.type === 'packages') {
+              @if (n.raw['valid'] === false) { <p class="note bad">{{ n.raw['reason'] ?? 'A package requirement is not met.' }}</p> }
+              @else if (n.raw['valid'] === true) { <p class="note ok">Every installed package's requirements are met.</p> }
+              @else { <p class="muted">Packages were never checked for this run.</p> }
+              <ul class="rows">
+                <li><b>Packages</b><span>{{ n.raw['package_count'] }}</span></li>
+                <li><b>Python</b><span>{{ n.raw['python_version'] ?? 'unknown' }}</span></li>
+                <li><b>Checked</b><span>{{ fmt(n.raw['checked_at']) }}</span></li>
+              </ul>
+            }
+            @if (n.type === 'profile') { <p class="muted">{{ n.raw['profile_type'] }} · {{ n.raw['status'] }}</p> }
+
+            @if (n.type === 'project') {
+              <section class="box"><header class="box-title">Runs</header>
+              <ul class="rows">
+                @for (r of envRuns(n); track r.env) {
+                  <li><b>{{ r.env }}</b><span>{{ r.runs ?? 0 }} runs · last {{ fmt(r.last) }}
+                    @if (r.pkgs === false) { <em class="badge bad">packages invalid</em> } @else if (r.pkgs === true) { <em class="badge ok">packages valid</em> }</span></li>
+                }
+              </ul></section>
+            } @else {
+              <section class="box"><header class="box-title">If this breaks <span class="count" [class.zero]="impactedProjects().length === 0">{{ impactedProjects().length }}</span></header>
+              @if (impactedProjects().length === 0) { <p class="muted">Nothing depends on this.</p> }
+              <ul class="rows">
+                @for (r of impactedEdges(n); track r.project.id) {
+                  <li class="click" (click)="selectedId.set(r.project.id)">
+                    <b>{{ r.project.label }}</b>
+                    <span>{{ r.envs.join(', ') }} @if (r.status === 'fail') { <em class="badge bad">failing</em> }</span>
+                  </li>
+                }
+              </ul></section>
+            }
+
+            @if (dependsOnByType().length) {
+              <section class="box"><header class="box-title">Depends on</header>
+              @for (g of dependsOnByType(); track g.type) {
+                <p class="group">{{ info[g.type].plural }}</p>
+                <div class="pills">@for (d of g.items; track d.id) { <button type="button" [class.bad]="isBroken(d)" (click)="selectedId.set(d.id)">{{ pillLabel(d) }}</button> }</div>
+              }
+              </section>
+            }
+          </div>
+        } @else {
+          <div class="head">
+            <div class="grow"><h2>Overview</h2>@if (!summaryOpen()) { <p class="brief">{{ brief() }}</p> }</div>
+            <button type="button" class="chev" [class.open]="summaryOpen()" [attr.aria-expanded]="summaryOpen()" [attr.aria-label]="summaryOpen() ? 'Collapse summary' : 'Expand summary'" (click)="summaryOpen.update(v => !v)">
+                <span>{{ summaryOpen() ? 'Hide' : 'Show' }}</span>
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
+              </button>
+          </div>
+          <div class="details">
+            <div class="stats">
+              <div class="stat"><b>{{ overview().projects }}</b><span>Projects</span></div>
+              <div class="stat"><b>{{ overview().dependencies }}</b><span>Dependencies</span></div>
+            </div>
+
+            <section class="box">
+              <header class="box-title">Projects at risk <span class="count" [class.zero]="overview().atRisk === 0">{{ overview().atRisk }}</span></header>
+              <div class="risk">
+                <h4>Package dependency</h4>
+                @for (p of overview().riskPackages; track p.id) { <button type="button" class="row" (click)="selectedId.set(p.id)">{{ p.label }}<em class="badge bad">invalid packages</em></button> }
+                @empty { <p class="none">No projects</p> }
+              </div>
+              <div class="risk">
+                <h4>Model deprecation</h4>
+                @for (p of overview().riskModels; track p.id) { <button type="button" class="row" (click)="selectedId.set(p.id)">{{ p.label }}<em class="badge bad">deprecated model</em></button> }
+                @empty { <p class="none">No projects</p> }
+              </div>
+              @if (overview().riskOther.length) {
+                <div class="risk">
+                  <h4>Other failing dependency</h4>
+                  @for (p of overview().riskOther; track p.id) { <button type="button" class="row" (click)="selectedId.set(p.id)">{{ p.label }}<em class="badge bad">failing</em></button> }
+                </div>
+              }
+            </section>
+
+            <section class="box">
+              <header class="box-title">Models deprecated within 3 months <span class="count" [class.zero]="overview().soon.length === 0">{{ overview().soon.length }}</span></header>
+              @for (m of overview().soon; track m.model.id) {
+                <button type="button" class="row" (click)="selectedId.set(m.model.id)">
+                  <span>{{ m.model.label }}<small>{{ m.projects }} {{ m.projects === 1 ? 'project' : 'projects' }}</small></span>
+                  <em class="badge" [class.bad]="m.over">{{ m.over ? 'ended ' : 'ends ' }}{{ m.ends }}</em>
+                </button>
+              } @empty { <p class="none">None</p> }
+            </section>
+          </div>
+        }
+      </section>
+
+      <section class="dock" [class.open]="chatOpen()">
+        @if (!chatOpen()) {
+          <button type="button" class="start" (click)="openChat()">Start chat</button>
+        } @else {
+          <div class="chat-head">
+            <b>AI chat</b>
+            @if (selected(); as n) { <span class="ctx">About {{ shortLabel(n) }}</span> }
+            <button type="button" class="chev" [class.open]="chatBodyOpen()" [attr.aria-expanded]="chatBodyOpen()" [attr.aria-label]="chatBodyOpen() ? 'Hide chat' : 'Show chat'" (click)="chatBodyOpen.update(v => !v)">
+              <span>{{ chatBodyOpen() ? 'Hide' : 'Show' }}</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
+            </button>
+          </div>
+          @if (chatBodyOpen()) {
+          <div class="thread" #thread>
+            @if (!messages().length) {
+              <div class="intro">
+                <h3 class="intro-title">Assess the impact of a decision around a dependency</h3>
+                <p class="intro-sub">Ask what breaks, who is affected, or what a project relies on.</p>
+                <div class="samples">
+                  @for (q of suggestions(); track q) { <button type="button" (click)="fill(q)">{{ q }}</button> }
+                </div>
+              </div>
+            }
+            @for (m of messages(); track $index) { <div class="msg" [class.user]="m.role === 'user'">{{ m.text }}</div> }
+          </div>
+          @if (messages().length) {
+            <div class="prompts tight">
+              @for (q of suggestions(); track q) { <button type="button" (click)="fill(q)">{{ q }}</button> }
+            </div>
+          }
+          <form class="composer" (submit)="$event.preventDefault(); send()">
+            <textarea #ask rows="2" placeholder="Ask AI about impact or dependencies" aria-label="Ask AI a question" [value]="draft()"
+                      (input)="draft.set($any($event.target).value)" (keydown.enter)="onEnter($event)"></textarea>
+            <button type="submit">Send</button>
+          </form>
+          }
+        }
+      </section>
+    </aside>
+  </main>
+}

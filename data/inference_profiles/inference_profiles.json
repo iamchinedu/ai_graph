@@ -1,0 +1,89 @@
+[
+  {
+    "id": "arn:aws:bedrock:us-east-1:111111111111:inference-profile/us.anthropic.claude-sonnet-4-6-v1:0",
+    "account_id": "111111111111",
+    "model_id": "anthropic.claude-sonnet-4-6-v1:0",
+    "type": "system_defined",
+    "regions": [
+      "us-east-1",
+      "us-east-2",
+      "us-west-2"
+    ],
+    "status": "active"
+  },
+  {
+    "id": "arn:aws:bedrock:us-east-1:222222222222:inference-profile/us.anthropic.claude-sonnet-4-6-v1:0",
+    "account_id": "222222222222",
+    "model_id": "anthropic.claude-sonnet-4-6-v1:0",
+    "type": "system_defined",
+    "regions": [
+      "us-east-1",
+      "us-east-2",
+      "us-west-2"
+    ],
+    "status": "active"
+  },
+  {
+    "id": "arn:aws:bedrock:us-east-1:333333333333:inference-profile/us.anthropic.claude-sonnet-4-6-v1:0",
+    "account_id": "333333333333",
+    "model_id": "anthropic.claude-sonnet-4-6-v1:0",
+    "type": "system_defined",
+    "regions": [
+      "us-east-1",
+      "us-east-2",
+      "us-west-2"
+    ],
+    "status": "active"
+  },
+  {
+    "id": "arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/finance-sonnet",
+    "account_id": "222222222222",
+    "model_id": "anthropic.claude-sonnet-4-6-v1:0",
+    "type": "application",
+    "regions": [
+      "us-east-1"
+    ],
+    "status": "active"
+  },
+  {
+    "id": "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/finance-sonnet",
+    "account_id": "111111111111",
+    "model_id": "anthropic.claude-sonnet-4-6-v1:0",
+    "type": "application",
+    "regions": [
+      "us-east-1"
+    ],
+    "status": "active"
+  },
+  {
+    "id": "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/procurement-nova",
+    "account_id": "111111111111",
+    "model_id": "amazon.nova-pro-v1:0",
+    "type": "application",
+    "regions": [
+      "us-east-1",
+      "us-west-2"
+    ],
+    "status": "active"
+  },
+  {
+    "id": "arn:aws:bedrock:us-east-1:333333333333:application-inference-profile/hr-claude3",
+    "account_id": "333333333333",
+    "model_id": "anthropic.claude-3-sonnet-20240229-v1:0",
+    "type": "application",
+    "regions": [
+      "us-east-1"
+    ],
+    "status": "active"
+  },
+  {
+    "id": "arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/ops-nova",
+    "account_id": "222222222222",
+    "model_id": "amazon.nova-pro-v1:0",
+    "type": "application",
+    "regions": [
+      "us-east-1"
+    ],
+    "status": "active"
+  }
+]

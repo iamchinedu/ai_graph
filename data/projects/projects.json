@@ -1,0 +1,37 @@
+[
+  {
+    "id": "prj_FIN_7f3a2c",
+    "name": "Vendor-spend assistant",
+    "department_id": 1,
+    "description": "Summarizes vendor spend from invoices and vendors.",
+    "created_at": "2026-11-12T20:32:58Z"
+  },
+  {
+    "id": "prj_PRC_9b1d44",
+    "name": "Procurement agent",
+    "department_id": 2,
+    "description": "Tracks purchase orders against invoices.",
+    "created_at": "2026-11-12T20:32:58Z"
+  },
+  {
+    "id": "prj_HR_c04e1a",
+    "name": "HR policy bot",
+    "department_id": 3,
+    "description": "Answers questions from the employee handbook and benefits docs.",
+    "created_at": "2026-11-12T20:32:58Z"
+  },
+  {
+    "id": "prj_ENG_52d9be",
+    "name": "IT helpdesk assistant",
+    "department_id": 4,
+    "description": "Triages helpdesk tickets.",
+    "created_at": "2026-11-12T20:32:58Z"
+  },
+  {
+    "id": "prj_OPS_a81f67",
+    "name": "Ops forecasting assistant",
+    "department_id": 5,
+    "description": "Explains demand forecasts and checks them against invoices.",
+    "created_at": "2026-11-12T20:32:58Z"
+  }
+]

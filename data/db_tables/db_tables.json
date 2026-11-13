@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "database_id": 1,
+    "table_name": "invoices",
+    "last_checked_at": "2026-11-12T20:33:01Z",
+    "table_exists": true
+  },
+  {
+    "id": 2,
+    "database_id": 1,
+    "table_name": "vendors",
+    "last_checked_at": "2026-11-12T20:33:01Z",
+    "table_exists": true
+  },
+  {
+    "id": 3,
+    "database_id": 2,
+    "table_name": "invoices",
+    "last_checked_at": "2026-11-12T20:33:01Z",
+    "table_exists": true
+  },
+  {
+    "id": 4,
+    "database_id": 2,
+    "table_name": "vendors",
+    "last_checked_at": "2026-11-12T20:33:01Z",
+    "table_exists": true
+  },
+  {
+    "id": 5,
+    "database_id": 3,
+    "table_name": "purchase_orders",
+    "last_checked_at": "2026-11-12T20:33:01Z",
+    "table_exists": true
+  },
+  {
+    "id": 6,
+    "database_id": 4,
+    "table_name": "handbook/",
+    "last_checked_at": "2026-11-12T20:33:01Z",
+    "table_exists": true
+  },
+  {
+    "id": 7,
+    "database_id": 4,
+    "table_name": "benefits/",
+    "last_checked_at": "2026-11-12T20:33:01Z",
+    "table_exists": true
+  },
+  {
+    "id": 8,
+    "database_id": 5,
+    "table_name": "tickets",
+    "last_checked_at": "2026-11-12T20:33:01Z",
+    "table_exists": true
+  },
+  {
+    "id": 9,
+    "database_id": 6,
+    "table_name": "forecasts",
+    "last_checked_at": "2026-11-12T20:33:01Z",
+    "table_exists": true
+  }
+]

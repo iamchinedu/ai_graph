@@ -1,0 +1,17 @@
+[project]
+name = "ai-graph"
+version = "0.1.0"
+description = "AI dependency map: SDK, local data store, graph queries, chat agent"
+requires-python = ">=3.12"
+dependencies = [
+  "duckdb",
+  "networkx",
+  "packaging",
+  "boto3",
+  "strands-agents",
+  "openai",
+  "google-genai",
+]
+
+[tool.setuptools.packages.find]
+include = ["backend*", "depmap_sdk*", "sample_projects*"]
