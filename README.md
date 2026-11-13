@@ -59,6 +59,22 @@ python -m backend.seed.simulate_break --help    # restore-* counterparts
 python -m backend.graph impact invoices --env prod
 ```
 
+## Streamlit app
+
+`streamlit_app/app.py` runs the map screen as a Streamlit component, with the chat agent behind its chat panel.
+- The graph comes from Python (`build_graph`), not from a file. The refresh icon asks Python to rebuild it.
+- A question typed in the chat panel goes to `ChatSession.ask()` and the answer comes back to the panel. The session remembers earlier questions
+  for as long as the browser tab stays open. The selected node and environment are sent along as context.
+- The message format between the screen and Streamlit is described at the top of `streamlit_app/app.py` and in `frontend/src/app/streamlit-bridge.ts`.
+- Needs a model key in `.env`. Without one, or when the quota is used up, the chat shows a short message instead of an answer.
+
+```bash
+cd frontend && npm install && npm run build:streamlit   # once, and after any change to the screen
+cd .. && streamlit run streamlit_app/app.py
+```
+
+The plain Angular app still works on its own (`cd frontend && npm start`); there the chat uses the built-in rule-based answers.
+
 ## Graph JSON (what the screen reads)
 
 The Angular screen reads one JSON object and nothing else. The URL is the `GRAPH_URL` constant in

@@ -10,3 +10,5 @@ frontend/node_modules/
 frontend/.angular/
 frontend/dist/
 frontend/public/graph.json
+
+streamlit_app/component/

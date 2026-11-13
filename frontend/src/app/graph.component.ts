@@ -6,6 +6,7 @@ import {
 } from './graph.model';
 import { GraphService } from './graph.service';
 import { answer } from './chat-engine';
+import { StreamlitBridge } from './streamlit-bridge';
 
 const LABEL_ALWAYS = new Set<NodeType>(['project', 'model', 'platform', 'tool', 'database', 'account']);
 const rgb = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
@@ -46,6 +47,8 @@ export class GraphComponent implements OnInit, AfterViewInit, OnDestroy {
   chatBodyOpen = signal(true);
   messages = signal<{ role: 'user' | 'assistant'; text: string }[]>([]);
   draft = signal('');
+  /** True while the Python agent is working on an answer. */
+  thinking = signal(false);
   @ViewChild('thread') thread?: ElementRef<HTMLElement>;
   @ViewChild('ask') ask?: ElementRef<HTMLTextAreaElement>;
   @ViewChild('cv') cv!: ElementRef<HTMLCanvasElement>;
@@ -63,14 +66,14 @@ export class GraphComponent implements OnInit, AfterViewInit, OnDestroy {
   private moved = false;
   private last = { x: 0, y: 0 };
 
-  constructor(private graphs: GraphService) {}
+  constructor(private graphs: GraphService, private bridge: StreamlitBridge) {}
 
-  ngOnInit() { return this.refresh(); }
+  ngOnInit() { return this.refresh(false); }
 
   /** Load the graph again. Keeps the selection, environment and view; the screen never refreshes on its own. */
-  async refresh() {
+  async refresh(force = true) {
     this.refreshing.set(true);
-    try { this.build(await this.graphs.load()); this.error.set(null); this.loadedAt.set(new Date()); }
+    try { this.build(await this.graphs.load(force)); this.error.set(null); this.loadedAt.set(new Date()); }
     catch (e: any) { this.error.set(e.message ?? String(e)); }
     finally { this.refreshing.set(false); }
   }
@@ -362,16 +365,31 @@ export class GraphComponent implements OnInit, AfterViewInit, OnDestroy {
   onEnter(ev: Event) { if (!(ev as KeyboardEvent).shiftKey) { ev.preventDefault(); this.send(); } }
   /** Put a sample question in the text box so the person can edit it, then send it. */
   fill(q: string) { this.draft.set(q); setTimeout(() => { const el = this.ask?.nativeElement; if (el) { el.focus(); el.setSelectionRange(q.length, q.length); } }); }
-  send(text?: string) {
+  async send(text?: string) {
     const q = (text ?? this.draft()).trim();
-    if (!q) return;
+    if (!q || this.thinking()) return;
     this.draft.set('');
     if (!this.chatOpen()) this.openChat();
+    if (this.bridge.active) { await this.askAgent(q); return; }
     const res = answer(q, { nodes: this.nodes(), links: this.tlinks(), env: this.env(), selected: this.selected(), trace: this.trace });
     this.messages.update((m) => [...m, { role: 'user', text: q }, { role: 'assistant', text: res.text }]);
     if (res.focus) this.selectedId.set(res.focus);
     setTimeout(() => { const el = this.thread?.nativeElement; if (el) el.scrollTop = el.scrollHeight; });
   }
+
+  /** Inside Streamlit: the Python chat agent answers (it remembers the conversation). */
+  private async askAgent(q: string) {
+    const n = this.selected();
+    const bits = [n ? `The user has selected ${n.label} (${n.type}).` : '', this.env() !== 'all' ? `They are looking at the ${this.env()} environment.` : ''];
+    this.messages.update((m) => [...m, { role: 'user', text: q }]);
+    this.thinking.set(true);
+    this.scrollThread();
+    const text = await this.bridge.request({ action: 'ask', question: q, context: bits.filter(Boolean).join(' ') });
+    this.messages.update((m) => [...m, { role: 'assistant', text: text || 'No answer came back.' }]);
+    this.thinking.set(false);
+    this.scrollThread();
+  }
+  private scrollThread() { setTimeout(() => { const el = this.thread?.nativeElement; if (el) el.scrollTop = el.scrollHeight; }); }
 
   /** Everything lit up when a node is selected: the real path plus the accounts and categories it passes through. */
   focusSet = computed(() => {

@@ -3,8 +3,8 @@
 Put your key in .env (copy .env.example if it is missing). Pick the provider with LLM_PROVIDER:
     LLM_PROVIDER=gemini                  # or openai
     GEMINI_API_KEY=...                   # https://aistudio.google.com/apikey
-    GEMINI_MODEL=gemini-2.5-flash        # orchestrator and answer writing
-    GEMINI_WRITER_MODEL=gemini-2.5-flash # the query writer (defaults to GEMINI_MODEL)
+    GEMINI_MODEL=gemini-3.5-flash-lite        # orchestrator and answer writing
+    GEMINI_WRITER_MODEL=gemini-3.5-flash-lite # the query writer (defaults to GEMINI_MODEL)
     OPENAI_API_KEY=sk-...                # https://platform.openai.com/api-keys
     OPENAI_MODEL=gpt-4o-mini
     OPENAI_WRITER_MODEL=gpt-4o-mini
@@ -50,7 +50,7 @@ def build_model(writer=False):
     name = provider()
     if name == "gemini":
         from strands.models.gemini import GeminiModel
-        default = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+        default = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
         model_id = os.environ.get("GEMINI_WRITER_MODEL", default) if writer else default
         return GeminiModel(client_args={"api_key": api_key("gemini"), "http_options": {"api_version": "v1beta"}},   # tool calls need v1beta
                            model_id=model_id, params={"temperature": 0})

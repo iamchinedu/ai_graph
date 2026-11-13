@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "prestart": "cp ../graph/graph_all.json public/graph.json",
-    "sync:graph": "cp ../graph/graph_all.json public/graph.json"
+    "sync:graph": "cp ../graph/graph_all.json public/graph.json",
+    "build:streamlit": "ng build --base-href ./ --output-path ../streamlit_app/component"
   },
   "private": true,
   "packageManager": "npm@11.19.1",

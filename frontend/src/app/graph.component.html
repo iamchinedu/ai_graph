@@ -185,6 +185,7 @@
               </div>
             }
             @for (m of messages(); track $index) { <div class="msg" [class.user]="m.role === 'user'">{{ m.text }}</div> }
+            @if (thinking()) { <div class="msg thinking">Thinking…</div> }
           </div>
           @if (messages().length) {
             <div class="prompts tight">
@@ -194,7 +195,7 @@
           <form class="composer" (submit)="$event.preventDefault(); send()">
             <textarea #ask rows="2" placeholder="Ask AI about impact or dependencies" aria-label="Ask AI a question" [value]="draft()"
                       (input)="draft.set($any($event.target).value)" (keydown.enter)="onEnter($event)"></textarea>
-            <button type="submit">Send</button>
+            <button type="submit" [disabled]="thinking()">Send</button>
           </form>
           }
         }
