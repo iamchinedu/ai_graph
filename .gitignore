@@ -5,7 +5,7 @@ __pycache__/
 scratch/*
 !scratch/.gitkeep
 *.egg-info/
-/graph/
+/graph/graph_*.json
 frontend/node_modules/
 frontend/.angular/
 frontend/dist/
@@ -14,3 +14,5 @@ frontend/public/graph.json
 streamlit_app/component/
 
 data/.lock
+
+.pytest_cache/

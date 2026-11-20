@@ -4,6 +4,9 @@ Tracks which AI projects depend on which models, data tables, data platforms and
 tools, per environment (dev / test / prod), so a chat agent can answer "what breaks if...?" questions.
 Everything runs locally; data lives in `data/` as JSON, one file per table.
 
+> **The `graph/` folder is a self-contained app**: a Streamlit dependency map with an AWS Strands agent on Amazon Bedrock.
+> It does not use the rest of this repo. See [graph/README.md](graph/README.md).
+
 ## Quick start
 
 ```bash

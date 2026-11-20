@@ -1,0 +1,7 @@
+:host { display: block; }
+.stage { position: relative; min-width: 0; background: #04060b; overflow: hidden; border-radius: 12px; border: 1px solid rgba(160, 190, 255, .12); }
+canvas { position: absolute; inset: 0; display: block; touch-action: none; cursor: grab; }
+.hint { position: absolute; left: 14px; top: 10px; font: 11.5px system-ui, sans-serif; color: rgba(190, 205, 235, .5); pointer-events: none; }
+.legend { position: absolute; left: 12px; right: 12px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 4px 14px; font: 11.5px system-ui, sans-serif; color: rgba(205, 215, 235, .8); pointer-events: none; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }

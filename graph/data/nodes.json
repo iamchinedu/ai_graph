@@ -1,0 +1,393 @@
+[
+  {
+    "type": "project",
+    "label": "Vendor-spend assistant",
+    "id": "prj_FIN_7f3a2c",
+    "department": "Finance",
+    "environments": {
+      "prod": {
+        "account_id": "222222222222",
+        "packages_valid": true,
+        "packages_reason": null,
+        "run_count": 12,
+        "last_init_at": "2026-11-12T20:32:58Z"
+      },
+      "dev": {
+        "account_id": "111111111111",
+        "packages_valid": true,
+        "packages_reason": null,
+        "run_count": 30,
+        "last_init_at": "2026-11-12T20:33:00Z"
+      }
+    },
+    "node": "project:prj_FIN_7f3a2c"
+  },
+  {
+    "type": "project",
+    "label": "Procurement agent",
+    "id": "prj_PRC_9b1d44",
+    "department": "Procurement",
+    "environments": {
+      "dev": {
+        "account_id": "111111111111",
+        "packages_valid": false,
+        "packages_reason": "boto3 1.40.0 requires botocore<1.41,>=1.40, but botocore 1.38.2 is installed",
+        "run_count": 9,
+        "last_init_at": "2026-11-12T20:33:00Z"
+      }
+    },
+    "node": "project:prj_PRC_9b1d44"
+  },
+  {
+    "type": "project",
+    "label": "HR policy bot",
+    "id": "prj_HR_c04e1a",
+    "department": "Human Resources",
+    "environments": {
+      "test": {
+        "account_id": "333333333333",
+        "packages_valid": true,
+        "packages_reason": null,
+        "run_count": 4,
+        "last_init_at": "2026-11-12T20:33:00Z"
+      }
+    },
+    "node": "project:prj_HR_c04e1a"
+  },
+  {
+    "type": "project",
+    "label": "IT helpdesk assistant",
+    "id": "prj_ENG_52d9be",
+    "department": "Engineering",
+    "environments": {
+      "test": {
+        "account_id": "333333333333",
+        "packages_valid": true,
+        "packages_reason": null,
+        "run_count": 15,
+        "last_init_at": "2026-11-12T20:33:01Z"
+      }
+    },
+    "node": "project:prj_ENG_52d9be"
+  },
+  {
+    "type": "project",
+    "label": "Ops forecasting assistant",
+    "id": "prj_OPS_a81f67",
+    "department": "Operations",
+    "environments": {
+      "prod": {
+        "account_id": "222222222222",
+        "packages_valid": true,
+        "packages_reason": null,
+        "run_count": 7,
+        "last_init_at": "2026-11-12T20:33:01Z"
+      }
+    },
+    "node": "project:prj_OPS_a81f67"
+  },
+  {
+    "type": "account",
+    "label": "222222222222",
+    "id": "222222222222",
+    "node": "account:222222222222"
+  },
+  {
+    "type": "packages",
+    "label": "Packages",
+    "id": "prj_FIN_7f3a2c:prod",
+    "environment": "prod",
+    "valid": true,
+    "reason": null,
+    "checked_at": "2026-11-12T20:32:58Z",
+    "python_version": "3.13.5",
+    "package_count": 86,
+    "node": "packages:prj_FIN_7f3a2c:prod"
+  },
+  {
+    "type": "account",
+    "label": "111111111111",
+    "id": "111111111111",
+    "node": "account:111111111111"
+  },
+  {
+    "type": "packages",
+    "label": "Packages",
+    "id": "prj_FIN_7f3a2c:dev",
+    "environment": "dev",
+    "valid": true,
+    "reason": null,
+    "checked_at": "2026-11-12T20:33:00Z",
+    "python_version": "3.13.5",
+    "package_count": 86,
+    "node": "packages:prj_FIN_7f3a2c:dev"
+  },
+  {
+    "type": "packages",
+    "label": "Packages",
+    "id": "prj_PRC_9b1d44:dev",
+    "environment": "dev",
+    "valid": false,
+    "reason": "boto3 1.40.0 requires botocore<1.41,>=1.40, but botocore 1.38.2 is installed",
+    "checked_at": "2026-11-12T20:33:00Z",
+    "python_version": "3.13.5",
+    "package_count": 86,
+    "node": "packages:prj_PRC_9b1d44:dev"
+  },
+  {
+    "type": "account",
+    "label": "333333333333",
+    "id": "333333333333",
+    "node": "account:333333333333"
+  },
+  {
+    "type": "packages",
+    "label": "Packages",
+    "id": "prj_HR_c04e1a:test",
+    "environment": "test",
+    "valid": true,
+    "reason": null,
+    "checked_at": "2026-11-12T20:33:00Z",
+    "python_version": "3.13.5",
+    "package_count": 86,
+    "node": "packages:prj_HR_c04e1a:test"
+  },
+  {
+    "type": "packages",
+    "label": "Packages",
+    "id": "prj_ENG_52d9be:test",
+    "environment": "test",
+    "valid": true,
+    "reason": null,
+    "checked_at": "2026-11-12T20:33:01Z",
+    "python_version": "3.13.5",
+    "package_count": 86,
+    "node": "packages:prj_ENG_52d9be:test"
+  },
+  {
+    "type": "packages",
+    "label": "Packages",
+    "id": "prj_OPS_a81f67:prod",
+    "environment": "prod",
+    "valid": true,
+    "reason": null,
+    "checked_at": "2026-11-12T20:33:01Z",
+    "python_version": "3.13.5",
+    "package_count": 86,
+    "node": "packages:prj_OPS_a81f67:prod"
+  },
+  {
+    "type": "profile",
+    "label": "finance-sonnet",
+    "id": "arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/finance-sonnet",
+    "profile_type": "application",
+    "status": "active",
+    "node": "profile:arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/finance-sonnet"
+  },
+  {
+    "type": "model",
+    "label": "Claude Sonnet 4.6",
+    "id": "anthropic.claude-sonnet-4-6-v1:0",
+    "deprecated": false,
+    "end_of_life_date": null,
+    "node": "model:anthropic.claude-sonnet-4-6-v1:0"
+  },
+  {
+    "type": "profile",
+    "label": "finance-sonnet",
+    "id": "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/finance-sonnet",
+    "profile_type": "application",
+    "status": "active",
+    "node": "profile:arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/finance-sonnet"
+  },
+  {
+    "type": "profile",
+    "label": "procurement-nova",
+    "id": "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/procurement-nova",
+    "profile_type": "application",
+    "status": "active",
+    "node": "profile:arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/procurement-nova"
+  },
+  {
+    "type": "model",
+    "label": "Amazon Nova Pro",
+    "id": "amazon.nova-pro-v1:0",
+    "deprecated": false,
+    "end_of_life_date": null,
+    "node": "model:amazon.nova-pro-v1:0"
+  },
+  {
+    "type": "profile",
+    "label": "hr-claude3",
+    "id": "arn:aws:bedrock:us-east-1:333333333333:application-inference-profile/hr-claude3",
+    "profile_type": "application",
+    "status": "active",
+    "node": "profile:arn:aws:bedrock:us-east-1:333333333333:application-inference-profile/hr-claude3"
+  },
+  {
+    "type": "model",
+    "label": "Claude 3 Sonnet",
+    "id": "anthropic.claude-3-sonnet-20240229-v1:0",
+    "deprecated": true,
+    "end_of_life_date": "2026-12-01",
+    "node": "model:anthropic.claude-3-sonnet-20240229-v1:0"
+  },
+  {
+    "type": "profile",
+    "label": "us.anthropic.claude-sonnet-4-6-v1:0",
+    "id": "arn:aws:bedrock:us-east-1:333333333333:inference-profile/us.anthropic.claude-sonnet-4-6-v1:0",
+    "profile_type": "system_defined",
+    "status": "active",
+    "node": "profile:arn:aws:bedrock:us-east-1:333333333333:inference-profile/us.anthropic.claude-sonnet-4-6-v1:0"
+  },
+  {
+    "type": "profile",
+    "label": "ops-nova",
+    "id": "arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/ops-nova",
+    "profile_type": "application",
+    "status": "active",
+    "node": "profile:arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/ops-nova"
+  },
+  {
+    "type": "table",
+    "label": "finance_db.invoices",
+    "id": 1,
+    "table_exists": true,
+    "environment": "prod",
+    "node": "table:1"
+  },
+  {
+    "type": "database",
+    "label": "finance_db",
+    "id": 1,
+    "environment": "prod",
+    "node": "database:1"
+  },
+  {
+    "type": "platform",
+    "label": "Snowflake",
+    "id": 4,
+    "node": "platform:Snowflake"
+  },
+  {
+    "type": "table",
+    "label": "finance_db.vendors",
+    "id": 2,
+    "table_exists": true,
+    "environment": "prod",
+    "node": "table:2"
+  },
+  {
+    "type": "table",
+    "label": "finance_db.invoices",
+    "id": 3,
+    "table_exists": true,
+    "environment": "dev",
+    "node": "table:3"
+  },
+  {
+    "type": "database",
+    "label": "finance_db",
+    "id": 2,
+    "environment": "dev",
+    "node": "database:2"
+  },
+  {
+    "type": "table",
+    "label": "procurement_catalog.purchase_orders",
+    "id": 5,
+    "table_exists": true,
+    "environment": "dev",
+    "node": "table:5"
+  },
+  {
+    "type": "database",
+    "label": "procurement_catalog",
+    "id": 3,
+    "environment": "dev",
+    "node": "database:3"
+  },
+  {
+    "type": "platform",
+    "label": "Databricks",
+    "id": 3,
+    "node": "platform:Databricks"
+  },
+  {
+    "type": "table",
+    "label": "hr-policies-bucket.handbook/",
+    "id": 6,
+    "table_exists": true,
+    "environment": "test",
+    "node": "table:6"
+  },
+  {
+    "type": "database",
+    "label": "hr-policies-bucket",
+    "id": 4,
+    "environment": "test",
+    "node": "database:4"
+  },
+  {
+    "type": "platform",
+    "label": "AWS S3",
+    "id": 1,
+    "node": "platform:AWS S3"
+  },
+  {
+    "type": "table",
+    "label": "hr-policies-bucket.benefits/",
+    "id": 7,
+    "table_exists": true,
+    "environment": "test",
+    "node": "table:7"
+  },
+  {
+    "type": "table",
+    "label": "helpdesk-tickets.tickets",
+    "id": 8,
+    "table_exists": true,
+    "environment": "test",
+    "node": "table:8"
+  },
+  {
+    "type": "database",
+    "label": "helpdesk-tickets",
+    "id": 5,
+    "environment": "test",
+    "node": "database:5"
+  },
+  {
+    "type": "platform",
+    "label": "AWS DynamoDB",
+    "id": 2,
+    "node": "platform:AWS DynamoDB"
+  },
+  {
+    "type": "table",
+    "label": "ops_catalog.forecasts",
+    "id": 9,
+    "table_exists": true,
+    "environment": "prod",
+    "node": "table:9"
+  },
+  {
+    "type": "database",
+    "label": "ops_catalog",
+    "id": 6,
+    "environment": "prod",
+    "node": "database:6"
+  },
+  {
+    "type": "tool",
+    "label": "HoneyHive",
+    "id": 1,
+    "node": "tool:HoneyHive"
+  },
+  {
+    "type": "tool",
+    "label": "Splunk",
+    "id": 2,
+    "node": "tool:Splunk"
+  }
+]

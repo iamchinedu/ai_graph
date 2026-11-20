@@ -1,0 +1,462 @@
+[
+  {
+    "kind": "project_account",
+    "environment": "prod",
+    "count": null,
+    "last_seen": "2026-11-12T20:32:58Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "account:222222222222"
+  },
+  {
+    "kind": "project_packages",
+    "environment": "prod",
+    "count": null,
+    "last_seen": "2026-11-12T20:32:58Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "packages:prj_FIN_7f3a2c:prod"
+  },
+  {
+    "kind": "project_account",
+    "environment": "dev",
+    "count": null,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "account:111111111111"
+  },
+  {
+    "kind": "project_packages",
+    "environment": "dev",
+    "count": null,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "packages:prj_FIN_7f3a2c:dev"
+  },
+  {
+    "kind": "project_profile",
+    "environment": "prod",
+    "count": 12,
+    "last_seen": "2026-11-12T20:32:58Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "profile:arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/finance-sonnet"
+  },
+  {
+    "kind": "project_profile",
+    "environment": "dev",
+    "count": 30,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "profile:arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/finance-sonnet"
+  },
+  {
+    "kind": "project_table",
+    "environment": "prod",
+    "count": 12,
+    "last_seen": "2026-11-12T20:32:58Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "table:1"
+  },
+  {
+    "kind": "project_table",
+    "environment": "prod",
+    "count": 12,
+    "last_seen": "2026-11-12T20:32:58Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "table:2"
+  },
+  {
+    "kind": "project_table",
+    "environment": "dev",
+    "count": 30,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "table:3"
+  },
+  {
+    "kind": "project_tool",
+    "environment": "prod",
+    "count": 12,
+    "last_seen": "2026-11-12T20:32:58Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "tool:HoneyHive"
+  },
+  {
+    "kind": "project_tool",
+    "environment": "dev",
+    "count": 30,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_FIN_7f3a2c",
+    "target": "tool:HoneyHive"
+  },
+  {
+    "kind": "project_account",
+    "environment": "dev",
+    "count": null,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_PRC_9b1d44",
+    "target": "account:111111111111"
+  },
+  {
+    "kind": "project_packages",
+    "environment": "dev",
+    "count": null,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "fail",
+    "status_reason": "boto3 1.40.0 requires botocore<1.41,>=1.40, but botocore 1.38.2 is installed",
+    "source": "project:prj_PRC_9b1d44",
+    "target": "packages:prj_PRC_9b1d44:dev"
+  },
+  {
+    "kind": "project_profile",
+    "environment": "dev",
+    "count": 9,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_PRC_9b1d44",
+    "target": "profile:arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/procurement-nova"
+  },
+  {
+    "kind": "project_table",
+    "environment": "dev",
+    "count": 9,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_PRC_9b1d44",
+    "target": "table:5"
+  },
+  {
+    "kind": "project_table",
+    "environment": "dev",
+    "count": 9,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_PRC_9b1d44",
+    "target": "table:3"
+  },
+  {
+    "kind": "project_tool",
+    "environment": "dev",
+    "count": 9,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_PRC_9b1d44",
+    "target": "tool:Splunk"
+  },
+  {
+    "kind": "project_account",
+    "environment": "test",
+    "count": null,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_HR_c04e1a",
+    "target": "account:333333333333"
+  },
+  {
+    "kind": "project_packages",
+    "environment": "test",
+    "count": null,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_HR_c04e1a",
+    "target": "packages:prj_HR_c04e1a:test"
+  },
+  {
+    "kind": "project_profile",
+    "environment": "test",
+    "count": 4,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "fail",
+    "status_reason": "model Claude 3 Sonnet is deprecated",
+    "source": "project:prj_HR_c04e1a",
+    "target": "profile:arn:aws:bedrock:us-east-1:333333333333:application-inference-profile/hr-claude3"
+  },
+  {
+    "kind": "project_table",
+    "environment": "test",
+    "count": 4,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_HR_c04e1a",
+    "target": "table:6"
+  },
+  {
+    "kind": "project_table",
+    "environment": "test",
+    "count": 4,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_HR_c04e1a",
+    "target": "table:7"
+  },
+  {
+    "kind": "project_tool",
+    "environment": "test",
+    "count": 4,
+    "last_seen": "2026-11-12T20:33:00Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_HR_c04e1a",
+    "target": "tool:Splunk"
+  },
+  {
+    "kind": "project_account",
+    "environment": "test",
+    "count": null,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_ENG_52d9be",
+    "target": "account:333333333333"
+  },
+  {
+    "kind": "project_packages",
+    "environment": "test",
+    "count": null,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_ENG_52d9be",
+    "target": "packages:prj_ENG_52d9be:test"
+  },
+  {
+    "kind": "project_profile",
+    "environment": "test",
+    "count": 15,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_ENG_52d9be",
+    "target": "profile:arn:aws:bedrock:us-east-1:333333333333:inference-profile/us.anthropic.claude-sonnet-4-6-v1:0"
+  },
+  {
+    "kind": "project_table",
+    "environment": "test",
+    "count": 15,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_ENG_52d9be",
+    "target": "table:8"
+  },
+  {
+    "kind": "project_tool",
+    "environment": "test",
+    "count": 15,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_ENG_52d9be",
+    "target": "tool:HoneyHive"
+  },
+  {
+    "kind": "project_account",
+    "environment": "prod",
+    "count": null,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_OPS_a81f67",
+    "target": "account:222222222222"
+  },
+  {
+    "kind": "project_packages",
+    "environment": "prod",
+    "count": null,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_OPS_a81f67",
+    "target": "packages:prj_OPS_a81f67:prod"
+  },
+  {
+    "kind": "project_profile",
+    "environment": "prod",
+    "count": 7,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_OPS_a81f67",
+    "target": "profile:arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/ops-nova"
+  },
+  {
+    "kind": "project_table",
+    "environment": "prod",
+    "count": 7,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_OPS_a81f67",
+    "target": "table:9"
+  },
+  {
+    "kind": "project_table",
+    "environment": "prod",
+    "count": 7,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": "pass",
+    "status_reason": null,
+    "source": "project:prj_OPS_a81f67",
+    "target": "table:1"
+  },
+  {
+    "kind": "project_tool",
+    "environment": "prod",
+    "count": 7,
+    "last_seen": "2026-11-12T20:33:01Z",
+    "status": null,
+    "status_reason": null,
+    "source": "project:prj_OPS_a81f67",
+    "target": "tool:Splunk"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "profile:arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/finance-sonnet",
+    "target": "model:anthropic.claude-sonnet-4-6-v1:0"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "profile:arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/finance-sonnet",
+    "target": "model:anthropic.claude-sonnet-4-6-v1:0"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "profile:arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/procurement-nova",
+    "target": "model:amazon.nova-pro-v1:0"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "profile:arn:aws:bedrock:us-east-1:333333333333:application-inference-profile/hr-claude3",
+    "target": "model:anthropic.claude-3-sonnet-20240229-v1:0"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "profile:arn:aws:bedrock:us-east-1:333333333333:inference-profile/us.anthropic.claude-sonnet-4-6-v1:0",
+    "target": "model:anthropic.claude-sonnet-4-6-v1:0"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "profile:arn:aws:bedrock:us-east-1:222222222222:application-inference-profile/ops-nova",
+    "target": "model:amazon.nova-pro-v1:0"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "table:1",
+    "target": "database:1"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "database:1",
+    "target": "platform:Snowflake"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "table:2",
+    "target": "database:1"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "table:3",
+    "target": "database:2"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "database:2",
+    "target": "platform:Snowflake"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "table:5",
+    "target": "database:3"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "database:3",
+    "target": "platform:Databricks"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "table:6",
+    "target": "database:4"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "database:4",
+    "target": "platform:AWS S3"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "table:7",
+    "target": "database:4"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "table:8",
+    "target": "database:5"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "database:5",
+    "target": "platform:AWS DynamoDB"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "table:9",
+    "target": "database:6"
+  },
+  {
+    "kind": "structural",
+    "environment": null,
+    "source": "database:6",
+    "target": "platform:Databricks"
+  }
+]
