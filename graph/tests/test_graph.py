@@ -176,3 +176,16 @@ def test_page_loads_filters_and_selects():
     assert not at.exception and at.session_state["selected"].startswith("project:")
     at.button(key="clear").click().run()
     assert at.session_state["selected"] is None
+
+
+def test_start_chat_opens_the_chat_and_folds_the_summary():
+    at = AppTest.from_file(APP, default_timeout=30).run()
+    assert not at.exception and at.session_state["summary_open"] and not at.session_state["chat_open"]
+    at.button(key="start_chat").click().run()
+    assert not at.exception
+    assert at.session_state["chat_open"] and not at.session_state["summary_open"]
+    assert at.chat_input, "the chat box is there"
+    at.button(key="toggle_summary").click().run()
+    assert at.session_state["summary_open"] and at.session_state["chat_open"]
+    at.button(key="close_chat").click().run()
+    assert not at.session_state["chat_open"] and at.session_state["summary_open"]

@@ -1,0 +1,10 @@
+[theme]
+base = "dark"
+paddingTop = "0rem"        # no empty band above the title
+paddingBottom = "1rem"
+
+[client]
+toolbarMode = "minimal"    # hides the Deploy button
+
+[browser]
+gatherUsageStats = false

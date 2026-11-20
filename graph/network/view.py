@@ -461,6 +461,18 @@ class View:
             return [f"What breaks if {n['label']} fails?", "Which projects are at risk?", "How many projects depend on HoneyHive?"]
         return ["What breaks if Claude 3 Sonnet is deprecated?", "How many projects depend on HoneyHive?", "Which projects are at risk?", "What does HR policy bot depend on?"]
 
+    def brief(self, n=None):
+        """One line for the collapsed summary."""
+        if n is None:
+            o = self.overview()
+            return f"{o['projects']} projects · {o['dependencies']} dependencies · {o['at_risk']} at risk"
+        if n["type"] == "project":
+            issues = len(self.issues_of(n))
+            runs = sum(r["runs"] or 0 for r in self.env_runs(n))
+            return f"{runs} runs · {f'{issues} issue' + ('' if issues == 1 else 's') if issues else 'no issues'}"
+        p = len(self.impacted_projects())
+        return f"{p} project{'s' if p != 1 else ''} depend{'s' if p == 1 else ''} on this"
+
     # what the map component draws: positions, colors and brightness, decided here and only painted there
     def scene(self, pos, fit_key, height):
         nodes = []

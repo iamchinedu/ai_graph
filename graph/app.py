@@ -72,6 +72,19 @@ def queue_question(question):
     st.session_state.pending = question
 
 
+def start_chat():
+    """Opening the chat folds the summary away to make room."""
+    st.session_state.update(chat_open=True, summary_open=False)
+
+
+def close_chat():
+    st.session_state.update(chat_open=False, summary_open=True)
+
+
+def toggle_summary():
+    st.session_state.summary_open = not st.session_state.summary_open
+
+
 # ---- state -----------------------------------------------------------------------------------
 
 st.set_page_config(page_title="Dependency map", layout="wide", initial_sidebar_state="collapsed")
@@ -82,6 +95,8 @@ st.session_state.setdefault("env", "all")
 st.session_state.setdefault("layout", "Brain")
 st.session_state.setdefault("query", "")
 st.session_state.setdefault("messages", [])          # what the chat panel shows
+st.session_state.setdefault("chat_open", False)
+st.session_state.setdefault("summary_open", True)
 store = get_store(st.session_state.raw)              # starts the background graph build if this data is new
 
 # ---- header: title and controls --------------------------------------------------------------
@@ -111,102 +126,142 @@ map_col, side_col = st.columns([3, 1.4])
 with map_col:
     dependency_map(view.scene(place(nodes, vlinks, layout), layout, MAP_HEIGHT), key="map", on_click=on_map_click)
 
-# ---- side panel: overview, or the selected node ----------------------------------------------
+# ---- side panel: a summary card that can be hidden, and the chat that opens below it -----------
+
+def link_row(text, key, node_id):
+    """A line of text on the left and a small arrow on the right that opens that node."""
+    left, right = st.columns([7, 1], vertical_alignment="center")
+    left.markdown(text)
+    right.button("", icon=":material/arrow_forward:", key=key, on_click=select, args=(node_id,), type="tertiary", help="Open")
+
+
+def render_overview(view):
+    ov = view.overview()
+    a, b, c = st.columns(3)
+    a.metric("Projects", ov["projects"])
+    b.metric("Dependencies", ov["dependencies"])
+    c.metric("At risk", ov["at_risk"])
+    if ov["at_risk"]:
+        st.error(f"**{ov['at_risk']} of {ov['projects']} projects need attention**", icon=":material/error:")
+    else:
+        st.success("No projects at risk", icon=":material/check_circle:")
+    ended = any(s["over"] for s in ov["soon"])
+    for title, why, color, rows in (("Package dependency", "invalid packages", "red", ov["risk_pkg"]),
+                                    ("Model deprecation", "deprecated model", "red" if ended else "orange", ov["risk_model"]),
+                                    ("Other failing dependency", "failing", "red", ov["risk_other"])):
+        if rows:
+            st.markdown(f":{color}[**{title}**] :{color}-badge[{len(rows)}]")
+            for p in rows:
+                link_row(f"**{p['label']}** :{color}-badge[{why}]", f"risk:{why}:{p['id']}", p["id"])
+    if ov["soon"]:
+        st.markdown(f":orange[**Models deprecated within 3 months**] :orange-badge[{len(ov['soon'])}]")
+        for s in ov["soon"]:
+            color = "red" if s["over"] else "orange"
+            n = s["projects"]
+            link_row(f"**{s['model']['label']}** · {n} {'project' if n == 1 else 'projects'} "
+                     f":{color}-badge[{'ended' if s['over'] else 'ends'} {s['ends']}]", f"soon:{s['model']['id']}", s["model"]["id"])
+
+
+def render_selected(view, sel):
+    r = sel["raw"]
+    st.caption(TYPE_INFO[sel["type"]][0] + (f" · {r.get('environment')}" if sel["type"] == "packages" else ""))
+    if is_deprecated(sel):
+        st.error(f"Deprecated. {eol_text(r.get('end_of_life_date'))}.", icon=":material/error:")
+    if sel["type"] == "table" and r.get("table_exists") is False:
+        st.error("This table no longer exists.", icon=":material/error:")
+    if sel["type"] == "packages":
+        if r.get("valid") is False:
+            st.error(r.get("reason") or "A package requirement is not met.", icon=":material/error:")
+        elif r.get("valid") is True:
+            st.success("Every installed package's requirements are met.", icon=":material/check_circle:")
+        else:
+            st.caption("Packages were never checked for this run.")
+        st.markdown(f"**Packages** {r.get('package_count')}  \n**Python** {r.get('python_version') or 'unknown'}  \n**Checked** {fmt(r.get('checked_at'))}")
+    if sel["type"] == "profile":
+        st.caption(f"{r.get('profile_type')} · {r.get('status')}")
+    if sel["type"] == "project":
+        issues = view.issues_of(sel)
+        st.markdown(f":{'red' if issues else 'green'}[**Issues**] :{'red' if issues else 'green'}-badge[{len(issues)}]")
+        for k, it in enumerate(issues):
+            link_row(f":red[**{it['title']}**]  \n{it['detail']}", f"issue:{k}:{it['id']}", it["id"])
+        if not issues:
+            st.caption("No issues found.")
+        st.markdown("**Runs**")
+        for run in view.env_runs(sel):
+            flag = ":red-badge[packages invalid]" if run["pkgs"] is False else ":green-badge[packages valid]" if run["pkgs"] is True else ""
+            st.markdown(f"**{run['env']}** · {run['runs'] or 0} runs · last {fmt(run['last'])} {flag}")
+    else:
+        rows = view.impacted_rows()
+        st.markdown(f":{'orange' if rows else 'green'}[**If this breaks**] :{'orange' if rows else 'green'}-badge[{len(rows)}]")
+        if not rows:
+            st.caption("Nothing depends on this.")
+        for row in rows:
+            link_row(f"**{row['project']['label']}** · {', '.join(row['envs'])}" + (" :red-badge[failing]" if row["status"] == "fail" else ""),
+                     f"hit:{row['project']['id']}", row["project"]["id"])
+    groups = view.depends_by_type()
+    if groups:
+        st.markdown("**Depends on**")
+    for t, items in groups:
+        st.caption(TYPE_INFO[t][1])
+        with st.container(horizontal=True):
+            for d in items:
+                st.button(view.pill_label(d), key=f"dep:{d['id']}", on_click=select, args=(d["id"],), type="primary" if is_broken(d) else "secondary")
+
+
+chat_open, summary_open = st.session_state.chat_open, st.session_state.summary_open
+# heights are chosen so the panel is about as tall as the map
+summary_h = 500 if not chat_open else 190
+thread_h = 378 if not summary_open else 193
 
 with side_col:
-    with st.container(height=340, border=True):
-        if sel is None:
-            ov = view.overview()
-            st.subheader("Overview")
-            a, b = st.columns(2)
-            a.metric("Projects", ov["projects"], border=True)
-            b.metric("Dependencies", ov["dependencies"], border=True)
-            st.markdown(f"**Projects at risk** :{'red' if ov['at_risk'] else 'green'}-badge[{ov['at_risk']}]")
-            for title, rows, why in (("Package dependency", ov["risk_pkg"], "invalid packages"), ("Model deprecation", ov["risk_model"], "deprecated model"),
-                                     ("Other failing dependency", ov["risk_other"], "failing")):
-                if rows or title != "Other failing dependency":
-                    st.caption(title)
-                    for p in rows:
-                        st.button(f"{p['label']} · {why}", key=f"risk:{why}:{p['id']}", on_click=select, args=(p["id"],), icon=":material/warning:", width="stretch")
-                    if not rows:
-                        st.write("No projects")
-            st.markdown(f"**Models deprecated within 3 months** :{'red' if ov['soon'] else 'green'}-badge[{len(ov['soon'])}]")
-            for s in ov["soon"]:
-                st.button(f"{s['model']['label']} · {s['projects']} {'project' if s['projects'] == 1 else 'projects'} · {'ended' if s['over'] else 'ends'} {s['ends']}",
-                          key=f"soon:{s['model']['id']}", on_click=select, args=(s["model"]["id"],), width="stretch")
-            if not ov["soon"]:
-                st.write("None")
-        else:
-            r = sel["raw"]
-            top = st.container(horizontal=True, vertical_alignment="center")
-            with top:
-                st.subheader(f"Packages {'valid' if r.get('valid') is True else 'invalid' if r.get('valid') is False else 'not checked'}" if sel["type"] == "packages" else short_label(sel))
-                st.button("", icon=":material/close:", on_click=select, args=(None,), help="Clear selection", key="clear")
-            st.caption(TYPE_INFO[sel["type"]][0] + (f" · {r.get('environment')}" if sel["type"] == "packages" else ""))
-            if is_deprecated(sel):
-                st.error(f"Deprecated. {eol_text(r.get('end_of_life_date'))}.")
-            if sel["type"] == "table" and r.get("table_exists") is False:
-                st.error("This table no longer exists.")
-            if sel["type"] == "packages":
-                if r.get("valid") is False:
-                    st.error(r.get("reason") or "A package requirement is not met.")
-                elif r.get("valid") is True:
-                    st.success("Every installed package's requirements are met.")
+    with st.container(border=True):
+        head = st.container(horizontal=True, vertical_alignment="center")
+        with head:
+            st.markdown(f"**{short_label(sel) if sel else 'Overview'}**")
+            if sel:
+                st.button("", icon=":material/close:", on_click=select, args=(None,), help="Clear selection", key="clear", type="tertiary")
+            st.button("Hide" if summary_open else "Show", icon=":material/expand_less:" if summary_open else ":material/expand_more:",
+                      on_click=toggle_summary, key="toggle_summary", type="tertiary")
+        if summary_open:
+            with st.container(height=summary_h, border=False):
+                if sel:
+                    render_selected(view, sel)
                 else:
-                    st.caption("Packages were never checked for this run.")
-                st.markdown(f"**Packages** {r.get('package_count')}  \n**Python** {r.get('python_version') or 'unknown'}  \n**Checked** {fmt(r.get('checked_at'))}")
-            if sel["type"] == "profile":
-                st.caption(f"{r.get('profile_type')} · {r.get('status')}")
-            if sel["type"] == "project":
-                issues = view.issues_of(sel)
-                st.markdown(f"**Issues** :{'red' if issues else 'green'}-badge[{len(issues)}]")
-                for k, it in enumerate(issues):
-                    st.button(f"{it['title']}  \n{it['detail']}", key=f"issue:{k}:{it['id']}", on_click=select, args=(it["id"],), width="stretch")
-                if not issues:
-                    st.write("No issues found.")
-                st.markdown("**Runs**")
-                for run in view.env_runs(sel):
-                    flag = ":red-badge[packages invalid]" if run["pkgs"] is False else ":green-badge[packages valid]" if run["pkgs"] is True else ""
-                    st.markdown(f"**{run['env']}** · {run['runs'] or 0} runs · last {fmt(run['last'])} {flag}")
-            else:
-                rows = view.impacted_rows()
-                st.markdown(f"**If this breaks** :{'red' if rows else 'green'}-badge[{len(rows)}]")
-                if not rows:
-                    st.write("Nothing depends on this.")
-                for row in rows:
-                    st.button(f"{row['project']['label']} · {', '.join(row['envs'])}{' · failing' if row['status'] == 'fail' else ''}",
-                              key=f"hit:{row['project']['id']}", on_click=select, args=(row["project"]["id"],), width="stretch")
-            groups = view.depends_by_type()
-            if groups:
-                st.markdown("**Depends on**")
-            for t, items in groups:
-                st.caption(TYPE_INFO[t][1])
-                with st.container(horizontal=True):
-                    for d in items:
-                        st.button(view.pill_label(d), key=f"dep:{d['id']}", on_click=select, args=(d["id"],), type="primary" if is_broken(d) else "secondary")
+                    render_overview(view)
+        else:
+            st.caption(view.brief(sel))
 
-    # ---- the chat: one agent per browser tab. It keeps the conversation, so follow-up questions work. ----
-    st.markdown(f"**AI chat**{f' · About {short_label(sel)}' if sel else ''}")
-    st.caption("The AI's graph failed to build." if store.error else "The AI's graph is ready." if store.ready else "The AI's graph is still building…")
-    thread = st.container(height=250, border=True)
-    prompt = st.chat_input("Ask AI about impact or dependencies") or st.session_state.pop("pending", None)
-    with thread:
-        if not st.session_state.messages and not prompt:
-            st.markdown("**Assess the impact of a decision around a dependency**")
-            st.caption("Ask what breaks, who is affected, or what a project relies on.")
-            for q in view.suggestions():
-                st.button(q, key=f"sugg:{q}", on_click=queue_question, args=(q,), width="stretch")
-        for m in st.session_state.messages:
-            with st.chat_message(m["role"]):
-                st.write(m["text"])
-        if prompt:
-            with st.chat_message("user"):
-                st.write(prompt)
-            with st.chat_message("assistant"):
-                with st.spinner("Thinking…"):
-                    if "agent" not in st.session_state:
-                        st.session_state.agent = create_agent()
-                    context = describe_context(sel, env)
-                    reply = ask_agent(st.session_state.agent, f"({context}) {prompt}" if context else prompt)
-                st.write(reply)
-            st.session_state.messages += [{"role": "user", "text": prompt}, {"role": "assistant", "text": reply}]
+    if not chat_open:
+        st.button("Start chat", icon=":material/chat:", type="primary", width="stretch", on_click=start_chat, key="start_chat")
+        st.caption("Ask what breaks, who is affected, or what a project relies on.")
+    else:
+        # ---- the chat: one agent per browser tab. It keeps the conversation, so follow-up questions work. ----
+        with st.container(border=True):
+            head = st.container(horizontal=True, vertical_alignment="center")
+            with head:
+                st.markdown(f"**AI chat**{f' · {short_label(sel)}' if sel else ''}")
+                st.button("Close", icon=":material/close:", on_click=close_chat, key="close_chat", type="tertiary")
+            st.caption(":red[The AI's graph failed to build.]" if store.error else "The AI's graph is ready." if store.ready else "The AI's graph is still building…")
+            thread = st.container(height=thread_h, border=False)
+            prompt = st.chat_input("Ask about any impact or dependency") or st.session_state.pop("pending", None)
+            with thread:
+                if not st.session_state.messages and not prompt:
+                    st.html("<div style='text-align:center;padding:1.6rem 0 .4rem'>"
+                            "<div style='font-size:1.35rem;font-weight:600'>What breaks? Who is affected?</div>"
+                            "<div style='opacity:.65;margin-top:.35rem'>Ask what a decision would change, or what a project relies on.</div></div>")
+                    for q in view.suggestions():
+                        st.button(q, key=f"sugg:{q}", on_click=queue_question, args=(q,), width="stretch")
+                for m in st.session_state.messages:
+                    with st.chat_message(m["role"]):
+                        st.write(m["text"])
+                if prompt:
+                    with st.chat_message("user"):
+                        st.write(prompt)
+                    with st.chat_message("assistant"):
+                        with st.spinner("Thinking…"):
+                            if "agent" not in st.session_state:
+                                st.session_state.agent = create_agent()
+                            context = describe_context(sel, env)
+                            reply = ask_agent(st.session_state.agent, f"({context}) {prompt}" if context else prompt)
+                        st.write(reply)
+                    st.session_state.messages += [{"role": "user", "text": prompt}, {"role": "assistant", "text": reply}]
